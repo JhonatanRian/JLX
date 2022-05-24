@@ -12,6 +12,7 @@ class User(Base):
 	password = Column(String)
 	fone = Column(String)
 	products = relationship("Product", back_populates="user")
+	requests = relationship("Request", back_populates="user")
 
 class Product(Base):
 
@@ -24,3 +25,19 @@ class Product(Base):
 	disponible = Column(Boolean)
 	user_id = Column(Integer, ForeignKey("user.id", name="fk_user"))
 	user = relationship("User", back_populates="products")
+
+class Request(Base):
+
+	__tablename__ = "request"
+
+	id = Column(Integer, primary_key=True, index=True)
+	locale_delivery = Column(String)
+	type_delivery = Column(String)
+	observation = Column(String)
+
+	user_id = Column(Integer, ForeignKey("user.id", name="fk_user"))
+	product_id = Column(Integer, ForeignKey("product.id", name="fk_product"))
+
+	user = relationship("User", back_populates="requests")
+	product = relationship("Product")
+

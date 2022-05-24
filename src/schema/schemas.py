@@ -3,12 +3,40 @@ from typing import List, Optional
 # uvicorn src.server:app --reload --reload-dir=src
 
 class User(BaseModel):
-	id: Optional[int] = None
 	name: str
 	# email: str
 	password: str
 	fone: str
 	
+	class Config:
+		orm_mode = True
+
+class Product(BaseModel):
+	name: str
+	details: str
+	price: float
+	disponible: bool
+	user_id: int
+
+	class Config:
+		orm_mode = True
+
+class ProductDefalt(BaseModel):
+	id: int
+	name: str
+	disponible: bool
+	price: float
+	details: str
+
+	class Config:
+		orm_mode = True
+
+class UserDefalt(BaseModel):
+	id: int
+	name: str
+	fone: str
+	products: List[ProductDefalt]
+
 	class Config:
 		orm_mode = True
 
@@ -20,33 +48,34 @@ class SimpleUser(BaseModel):
 	class Config:
 		orm_mode = True
 
-class Product(BaseModel):
-	id: Optional[str] = None
-	user_id: int
-	name: str
-	details: str
-	price: float
-	disponible: bool
-
-	class Config:
-		orm_mode = True
-
 class SimpleProduct(BaseModel):
-	id: Optional[str] = None
+	id: int
 	name: str
 	disponible: bool
 	price: float
 	details: str
-	user: Optional[SimpleUser]
+	user: SimpleUser
 
 	class Config:
 		orm_mode = True
 
 
-# class Request(BaseModel):
-# 	id: Optional[str] = None
-# 	user: User
-# 	quantity: int
-# 	delivery: bool = False
-# 	address: str
-# 	observation: Optional[str] = "Not observation"
+class InputRequest(BaseModel):
+	locale_delivery: Optional[str]
+	type_delivery: str
+	observation: Optional[str] = "Not observation"
+
+	user_id: int
+	product_id: int
+
+class OutputRequest(BaseModel):
+	id: int
+	locale_delivery: Optional[str]
+	type_delivery: str
+	observation: Optional[str] = "Not observation"
+
+	user: SimpleUser
+	product: SimpleProduct
+
+	class Config:
+		orm_mode = True

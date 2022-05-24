@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import update, delete
+from sqlalchemy import update, delete, select
 from sqlalchemy.orm import Session
 from src.schema import schemas
 from src.infra.sqlalchemy.models import models
@@ -49,21 +49,27 @@ class RepositoryProduct():
 		query_products: List[models.Product] = self.session.query(models.Product).all()
 		return query_products
 
-	def update(self: object, product: schemas.Product) -> models.Product:
-		stmt = update(models.Product).where(models.Product.id == product.id).values(
+	def update(self: object,id: int, product: schemas.Product) -> models.Product:
+		stmt = update(models.Product).where(models.Product.id == id).values(
 			name=product.name,
 			details=product.details,
 			price=product.price,
 			disponible=product.disponible,
-			user_id=product.user_id
 		)
 		self.session.execute(stmt)
 		self.session.commit()
 
-	def get(self: object):
-		...
+	def get(self: object, id: int):
+		consultation = select(models.Product).where(models.Product.id == id)
+		product = self.session.execute(consultation).scalars().first()
+		return product
 
 	def delete(self: object, id: int):
 		stmt = delete(models.Product).where(models.Product.id == id)
 		self.session.execute(stmt)
 		self.session.commit()
+	
+	def my_products(self: object, user_id: int) -> List[models.Request]:
+		stmt = select(models.Product).where(models.Product.user_id == user_id)
+		products = self.session.execute(stmt).scalars().all()
+		return products
