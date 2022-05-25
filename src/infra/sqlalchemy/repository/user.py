@@ -13,6 +13,7 @@ class RepositoryUser:
     def create(self: object, user: schemas.User) -> models.User:
         user_model: models.User = models.User(
             name=user.name,
+            email=user.email,
             password=user.password,
             fone=user.fone
         )
@@ -29,8 +30,9 @@ class RepositoryUser:
     # def update(self: object) -> models.User:
     #     stmt = update(models)
 
-    def get(self: object) -> None:
-        ...
+    def get_for_email(self: object, email: str) -> None:
+        stmt = select(models.User).where(models.User.email == email)
+        return self.session.execute(stmt).scalars().first()
 
     def remove(self: object) -> None:
         ...

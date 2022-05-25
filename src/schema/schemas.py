@@ -4,7 +4,7 @@ from typing import List, Optional
 
 class User(BaseModel):
 	name: str
-	# email: str
+	email: str
 	password: str
 	fone: str
 	
@@ -79,3 +79,11 @@ class OutputRequest(BaseModel):
 
 	class Config:
 		orm_mode = True
+
+class Login(BaseModel):
+	email: str
+	password: str
+
+class LoginSuccess(BaseModel):
+	user: SimpleUser
+	access_token: str
